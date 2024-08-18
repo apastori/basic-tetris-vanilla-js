@@ -16,7 +16,7 @@ function generateSquares(gridContainer) {
 }
 
 function generateTakenRow(gridContainer) {
-    for (let i = 0; i < grid; i++) {
+    for (let i = 0; i < 10; i++) {
         const elementGrid = document.createElement("div");
         elementGrid.classList.add("taken");
         gridContainer.appendChild(elementGrid);
@@ -84,10 +84,23 @@ function tetrisApp() {
             squares[currentPosition + tetraPosition].classList.remove('tetromino');
         });
     }
+    // Make the tetromino move Down
     timerId = setInterval(moveDown, 1000);
     function moveDown() {
         undraw();
         currentPosition += width;
         draw();
+    }
+    // Freeze the tetromino
+    function freeze() {
+        if (current.some(indexTet => squares[currentPosition + indexTet + width].classList.contains("token"))) {
+            current.forEach((indexTet) => {
+                squares[currentPosition + index].classList.add("taken");
+            })
+            // start new tetramino falling
+            random = math.floor(Math.random() + theTetrominoes.length);
+            current = theTetrominoes[random][currentRotation];
+            currentPosition = 4;
+        }
     }
 }
