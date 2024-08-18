@@ -73,6 +73,8 @@ function tetrisApp() {
     let current = theTetrominoes[random][currentRotation];
     generateSquares(gridContainer);
     console.log(squares);
+    generateTakenRow(gridContainer);
+    console.log(gridContainer);
     function draw() {
         current.forEach(tetraPosition => {
             squares[currentPosition + tetraPosition].classList.add('tetromino');
@@ -86,21 +88,27 @@ function tetrisApp() {
     }
     // Make the tetromino move Down
     timerId = setInterval(moveDown, 1000);
+
     function moveDown() {
         undraw();
         currentPosition += width;
         draw();
+        freeze();
     }
-    // Freeze the tetromino
+    // Freeze the tetromino at the bottom of grid
     function freeze() {
-        if (current.some(indexTet => squares[currentPosition + indexTet + width].classList.contains("token"))) {
-            current.forEach((indexTet) => {
-                squares[currentPosition + index].classList.add("taken");
-            })
+        console.log("freeze running outside if");
+        if (current.some(indexTet => squares[currentPosition + indexTet + width].classList.contains("taken"))) {
+            console.log("freeze running inside if");
+            current.forEach(indexTet => squares[currentPosition + indexTet].classList.add("taken"));
             // start new tetramino falling
-            random = math.floor(Math.random() + theTetrominoes.length);
+            random = Math.floor(Math.random() * theTetrominoes.length);
+            console.log("currentRotation", currentRotation);
+            console.log(theTetrominoes);
             current = theTetrominoes[random][currentRotation];
             currentPosition = 4;
+            draw();
         }
     }
+
 }
