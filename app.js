@@ -89,6 +89,17 @@ function tetrisApp() {
     // Make the tetromino move Down
     timerId = setInterval(moveDown, 1000);
 
+    //assign keyCodes
+    function control(e) {
+        if (e.keyCode === 37) {
+            moveLeft();
+        } else if (e.keyCode === 39) {
+            moveRight();
+        }
+    }
+
+    document.addEventListener("keyup", control);
+
     function moveDown() {
         undraw();
         currentPosition += width;
@@ -97,9 +108,9 @@ function tetrisApp() {
     }
     // Freeze the tetromino at the bottom of grid
     function freeze() {
-        console.log("freeze running outside if");
-        if (current.some(indexTet => squares[currentPosition + indexTet + width].classList.contains("taken"))) {
-            console.log("freeze running inside if");
+        if (current.some(indexTet => {
+            return squares[currentPosition + indexTet + width].classList.contains("taken")
+        })) {
             current.forEach(indexTet => squares[currentPosition + indexTet].classList.add("taken"));
             // start new tetramino falling
             random = Math.floor(Math.random() * theTetrominoes.length);
@@ -109,6 +120,34 @@ function tetrisApp() {
             currentPosition = 4;
             draw();
         }
+    }
+
+    function moveLeft() {
+        undraw();
+        const isAtLeftEdge = current.some((index) => {
+            return ((currentPosition + index) % width === 0);
+        })
+        if (!isAtLeftEdge) currentPosition -= 1;
+        if (current.some(index => {
+            return squares[currentPosition + index].classList.contains("taken");
+        })) {
+            currentPosition += 1;
+        }
+        draw();
+    }
+
+    function moveRight() {
+        undraw();
+        const isAtRightEdge = current.some((index) => {
+            return ((currentPosition + index) % width === width - 1);
+        })
+        if (!isAtRightEdge) currentPosition += 1;
+        if (current.some(index => {
+            return squares[currentPosition + index].classList.contains("taken");
+        })) {
+            currentPosition -= 1;
+        }
+        draw();
     }
 
 }
