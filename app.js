@@ -257,6 +257,7 @@ function tetrisApp() {
 
     // Add scoreboard counting
     function addScore() {
+        console.log(squares);
         for (let i = 0; i < 199; i += width) {
             const row = [
                 i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9
@@ -271,12 +272,10 @@ function tetrisApp() {
                     squares[indexRow].classList.remove("tetromino");
                     squares[indexRow].style.backgroundColor = '';
                 });
-                const squaresRemoved = Array.from(squares).splice(i, width);
+                const squaresRemoved = squares.splice(i, width);
                 console.log(squaresRemoved);
-                console.log(typeof squaresRemoved);
-                squares = squaresRemoved.concat(Array.from(squares));
+                squares = squaresRemoved.concat(squares);
                 console.log(squares);
-                console.log(typeof squares);
                 squares.forEach((cell) => {
                     gridContainer.appendChild(cell);
                 });
