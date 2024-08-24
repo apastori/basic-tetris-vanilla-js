@@ -98,7 +98,7 @@ function tetrisApp() {
         });
     }
     // Make the tetromino move Down
-    timerId = setInterval(moveDown, 1000);
+    //timerId = setInterval(moveDown, 1000);
 
     //assign keyCodes
     function control(e) {
@@ -108,6 +108,8 @@ function tetrisApp() {
             moveRight();
         } else if (e.keyCode === 38) {
             rotate();
+        } else if (e.keyCode === 40) {
+            moveDown();
         }
     }
 
@@ -197,4 +199,18 @@ function tetrisApp() {
             nextSquares[nextIndex + tetroIndex].classList.add("tetromino");
         })
     }
+
+    //Add functionality to start
+    startButton.addEventListener("click", () => {
+        if (timerId) {
+            clearInterval(timerId);
+            timerId = null;
+        } else {
+            draw();
+            timerId = setInterval(moveDown, 1000);
+            nextRandom = Math.floor(Math.random() * theTetrominoes.length);
+            displayNext();
+        }
+    });
+
 }
