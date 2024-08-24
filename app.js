@@ -95,6 +95,8 @@ function tetrisApp() {
             moveLeft();
         } else if (e.keyCode === 39) {
             moveRight();
+        } else if (e.keyCode === 38) {
+            rotate();
         }
     }
 
@@ -147,6 +149,15 @@ function tetrisApp() {
         })) {
             currentPosition -= 1;
         }
+        draw();
+    }
+
+    // Rotate the tetris piece
+    function rotate() {
+        undraw();
+        currentRotation++;
+        if (currentRotation === current.length) currentRotation = 0;
+        current = theTetrominoes[random][currentRotation];
         draw();
     }
 
