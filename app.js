@@ -3,6 +3,7 @@ const width = 10;
 const grid = height * width;
 let timerId;
 let nextRandom = 0;
+let score = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
     tetrisApp();
@@ -208,9 +209,35 @@ function tetrisApp() {
         } else {
             draw();
             timerId = setInterval(moveDown, 1000);
-            nextRandom = Math.floor(Math.random() * theTetrominoes.length);
-            displayNext();
+            if (Array.from(miniGridContainer.getElementsByClassName("tetromino")).length === 0) {
+                nextRandom = Math.floor(Math.random() * theTetrominoes.length);
+                displayNext();
+            }
         }
     });
+
+    function addScore() {
+        for(let i = 0; i < 199; i += width) {
+            const row = [
+                i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9
+            ]
+            if (row.every(indexSquare => {
+                return squares[index].classList.contains("taken");
+            })) {
+                score += 10;
+                scoreDisplay.innerHTML = score;
+                row.forEach(indexRow => {
+                    squares[index].classList.remove("taken");
+                    squares[index].classList.remove("tetromino");
+                });
+                const squaresRemoved = squares.splice(1, width);
+                console.log(squaresRemoved);
+                squares = squaresRemoved.concat(squares);
+                squares.forEach((cell) => {
+                    grid.appendChild(cell);
+                });
+            }
+        }
+    }
 
 }
