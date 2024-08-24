@@ -38,10 +38,20 @@ function tetrisApp() {
     const gridContainer = document.getElementsByClassName("grid")[0];
     const miniGridContainer = document.getElementsByClassName("minigrid")[0];
     console.log(gridContainer);
-    let squares = gridContainer.getElementsByTagName("div");
+    generateSquares(gridContainer);
+    generateTakenRow(gridContainer);
+    generateMiniGrid(miniGridContainer);
+    let squares = Array.from(gridContainer.getElementsByTagName("div"));
     console.log(squares);
     const scoreDisplay = document.getElementById("score");
     const startButton = document.getElementById("start-button");
+    const colors = [
+        'orange',
+        'red',
+        'purple',
+        'green',
+        'blue'
+    ];    
     //The Tetrominoes
     const lTetromino = [
         [1, width+1, width*2+1, 2],
@@ -77,25 +87,23 @@ function tetrisApp() {
         [1,width+1,width*2+1,width*3+1],
         [width,width+1,width+2,width+3]
     ];
+
     const theTetrominoes = [lTetromino, zTetromino, tTetromino, oTetromino, iTetromino];
     let currentPosition = 4;
     let currentRotation = 0;
     let random = Math.floor(Math.random() * theTetrominoes.length);
     let current = theTetrominoes[random][currentRotation];
-    generateSquares(gridContainer);
-    console.log(squares);
-    generateTakenRow(gridContainer);
-    generateMiniGrid(miniGridContainer);
     console.log(gridContainer);
     function draw() {
         current.forEach(tetraPosition => {
             squares[currentPosition + tetraPosition].classList.add('tetromino');
+            squares[currentPosition + tetraPosition].style.backgroundColor = colors[random]
         });    
     }
-    draw();
     function undraw() {
         current.forEach(tetraPosition => {
             squares[currentPosition + tetraPosition].classList.remove('tetromino');
+            squares[currentPosition + tetraPosition].style.backgroundColor = ''
         });
     }
     // Make the tetromino move Down
@@ -122,6 +130,7 @@ function tetrisApp() {
         draw();
         freeze();
     }
+
     // Freeze the tetromino at the bottom of grid
     function freeze() {
         if (current.some(indexTet => {
@@ -131,12 +140,12 @@ function tetrisApp() {
             // start new tetramino falling
             random = nextRandom;
             nextRandom = Math.floor(Math.random() * theTetrominoes.length);
-            console.log("currentRotation", currentRotation);
-            console.log(theTetrominoes);
             current = theTetrominoes[random][currentRotation];
             currentPosition = 4;
             draw();
             displayNext();
+            addScore();
+            gameOver();
         }
     }
 
@@ -168,12 +177,40 @@ function tetrisApp() {
         draw();
     }
 
+    function isAtRight() {
+        return current.some(indexTet => {
+            return ((currentPosition + indexTet + 1) % width === 0);
+        })
+    }
+    
+    function isAtLeft() {
+        return current.some(indexTet => {
+            return ((currentPosition + indexTet) % width === 0)
+        }) 
+    }
+
+    function checkRotatedPosition(P) {
+        P = P || currentPosition;
+        if ((P+1) % width < 4) {     
+          if (isAtRight()) {
+                currentPosition += 1 
+                checkRotatedPosition(P) 
+            }
+        } else if (P % width > 5) {
+          if (isAtLeft()) {
+            currentPosition -= 1
+            checkRotatedPosition(P)
+          }
+        }
+    }
+    
     // Rotate the tetris piece
     function rotate() {
         undraw();
         currentRotation++;
         if (currentRotation === current.length) currentRotation = 0;
         current = theTetrominoes[random][currentRotation];
+        checkRotatedPosition();
         draw();
     }
 
@@ -195,9 +232,11 @@ function tetrisApp() {
         console.log(nextSquares);
         Array.from(nextSquares).forEach(nextSquare => {
             nextSquare.classList.remove('tetromino');
+            nextSquare.style.backgroundColor = '';
         });
         nextTetrominoes[nextRandom].forEach(tetroIndex => {
             nextSquares[nextIndex + tetroIndex].classList.add("tetromino");
+            nextSquares[nextIndex + tetroIndex].style.backgroundColor = colors[nextRandom];
         })
     }
 
@@ -216,27 +255,41 @@ function tetrisApp() {
         }
     });
 
+    // Add scoreboard counting
     function addScore() {
-        for(let i = 0; i < 199; i += width) {
+        for (let i = 0; i < 199; i += width) {
             const row = [
                 i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9
-            ]
+            ];
             if (row.every(indexSquare => {
-                return squares[index].classList.contains("taken");
+                return squares[indexSquare].classList.contains("taken");
             })) {
                 score += 10;
                 scoreDisplay.innerHTML = score;
                 row.forEach(indexRow => {
-                    squares[index].classList.remove("taken");
-                    squares[index].classList.remove("tetromino");
+                    squares[indexRow].classList.remove("taken");
+                    squares[indexRow].classList.remove("tetromino");
+                    squares[indexRow].style.backgroundColor = '';
                 });
-                const squaresRemoved = squares.splice(1, width);
+                const squaresRemoved = Array.from(squares).splice(i, width);
                 console.log(squaresRemoved);
-                squares = squaresRemoved.concat(squares);
+                console.log(typeof squaresRemoved);
+                squares = squaresRemoved.concat(Array.from(squares));
+                console.log(squares);
+                console.log(typeof squares);
                 squares.forEach((cell) => {
-                    grid.appendChild(cell);
+                    gridContainer.appendChild(cell);
                 });
             }
+        }
+    }
+
+    function gameOver() {
+        if (current.some(indexTetra => {
+            return squares[currentPosition + indexTetra].classList.contains("taken")    
+        })) {
+            scoreDisplay.innerHTML = "End";
+            clearInterval(timerId);
         }
     }
 
