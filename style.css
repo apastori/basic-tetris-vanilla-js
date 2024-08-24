@@ -25,7 +25,7 @@
     width: 80px;
     height: 80px;
     display: flex;
-    flew-wrap: wrap;
+    flex-wrap: wrap;
     background-color: yellow;
 }
 
