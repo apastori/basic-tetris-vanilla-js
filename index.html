@@ -14,12 +14,23 @@
     <h1 id="tetrisTitle">Tetris</h1>
     <h3 id="scoreTitle">Score:<span id="score">0</span></h3>
     <button id="start-button">Start/Pause</button>
+    <p id="paragraphStartStop"></p>
     <div class="container">
         <div class="grid"></div>
         <div class="optionsContainer">
-            <h3>Next: </h3>
-            <div class="minigrid"></div>
-            <h3 id="controlTitle">Controls: </h3>
+            <div class="nextContainer">
+                <h3>Next: </h3>
+                <div class="minigrid"></div>
+            </div>
+            <div class="controlContainer">
+                <h3 id="controlTitle">Controls: </h3>
+                <div class="controls">
+                    <p>Move Left: <span style='font-size:25px;'>&#8592;</span></p>
+                    <p>Move Right: <span style='font-size:25px;'>&#8594;</span></p>
+                    <p>Move Down: <span style='font-size:25px;'>&#x2193;</span></p>
+                    <p>Rotate: <span style='font-size:25px;'>&#8634;</span></p>
+                </div>
+            </div>
         </div>
     </div>
 </body>

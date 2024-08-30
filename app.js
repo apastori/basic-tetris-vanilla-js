@@ -4,6 +4,7 @@ const grid = height * width;
 let timerId;
 let nextRandom = 0;
 let score = 0;
+let running = false;
 
 document.addEventListener("DOMContentLoaded", () => {
     tetrisApp();
@@ -45,6 +46,8 @@ function tetrisApp() {
     console.log(squares);
     const scoreDisplay = document.getElementById("score");
     const startButton = document.getElementById("start-button");
+    const paragraphStartStop = document.querySelector("#paragraphStartStop");
+    paragraphStartStop.innerHTML = "Game is stopped";
     const colors = [
         'orange',
         'red',
@@ -125,6 +128,7 @@ function tetrisApp() {
     document.addEventListener("keyup", control);
 
     function moveDown() {
+        if (!running && !timerId) return;
         undraw();
         currentPosition += width;
         draw();
@@ -150,6 +154,7 @@ function tetrisApp() {
     }
 
     function moveLeft() {
+        if (!running && !timerId) return;
         undraw();
         const isAtLeftEdge = current.some((index) => {
             return ((currentPosition + index) % width === 0);
@@ -164,6 +169,7 @@ function tetrisApp() {
     }
 
     function moveRight() {
+        if (!running && !timerId) return;
         undraw();
         const isAtRightEdge = current.some((index) => {
             return ((currentPosition + index) % width === width - 1);
@@ -206,6 +212,7 @@ function tetrisApp() {
     
     // Rotate the tetris piece
     function rotate() {
+        if (!running && !timerId) return;
         undraw();
         currentRotation++;
         if (currentRotation === current.length) currentRotation = 0;
@@ -242,12 +249,16 @@ function tetrisApp() {
 
     //Add functionality to start
     startButton.addEventListener("click", () => {
-        if (timerId) {
+        if (running && timerId) {
             clearInterval(timerId);
             timerId = null;
+            running = false;
+            paragraphStartStop.innerHTML = "Game is stopped";
         } else {
             draw();
             timerId = setInterval(moveDown, 1000);
+            running = true;
+            paragraphStartStop.innerHTML = "Game is Running";
             if (Array.from(miniGridContainer.getElementsByClassName("tetromino")).length === 0) {
                 nextRandom = Math.floor(Math.random() * theTetrominoes.length);
                 displayNext();
