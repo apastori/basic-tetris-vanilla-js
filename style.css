@@ -1,13 +1,16 @@
+@import url('https://fonts.google.com/share?selection.family=Press+Start+2P');
+
 :root {
-    --tetris-title: 'Slackey', sans-serif;
+    --tetris-font: "Press Start 2P", system-ui;
 }
 
 body {
     text-align: center;
+    font-family: var(--tetris-font);
 }
 
 #tetrisTitle {
-    font-family: var(--tetris-title);
+    font-family: var(--tetris-font);
 }
   
 .container {
@@ -22,6 +25,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     background-color: yellow;
+    border: 1px solid black;
 }
 
 .grid div {
@@ -34,16 +38,59 @@ body {
     background-color: blue;
 }
 
+.optionsContainer {
+    padding-right: 20px;
+}
+
+.optionsContainer > h3 {
+    font-family: var(--tetris-font);
+    margin-left: 30px;
+}
+
+#controlTitle {
+    margin-left: 50px;
+}
+
 .minigrid {
     margin-left: 50px;
     width: 80px;
     height: 80px;
+    background-color: yellow;
     display: flex;
     flex-wrap: wrap;
-    background-color: yellow;
+    border: 1px solid black;
 }
 
 .minigrid div {
     height: 20px;
     width: 20px;
+}
+
+#scoreTitle {
+    font-family: var(--tetris-font);
+    text-shadow: 1px 1px 1px black;
+}
+
+#start-button {
+    font-family: var(--tetris-font);
+    text-align: center;
+	display: inline-block;
+	margin:5px;
+    font-weight: bold;
+    padding: 10px 10px 10px 10px ;
+    background-color: lightgray;
+    text-shadow: -1px -1px black, 1px 1px white;
+    color: gray;
+    -webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	-o-border-radius: 7px;
+	border-radius: 7px;
+    box-shadow: 0 .2em gray; 
+    cursor: pointer;
+}
+
+#start-button:active {
+    box-shadow: none;
+	position: relative;
+	top: .2em;
 }
